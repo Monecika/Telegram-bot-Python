@@ -70,25 +70,22 @@ async def addUser(message: types.Message, user_id: str, last_message: str):
 
 async def updateUser(message: types.Message, user_id: str, last_message: str):
     print(await getMessage(user_id))
-    if (await doesExist(message.from_user.id)) and (await getMessage(user_id) != last_message):
-        conn = await open_connection()
-        cursor = conn.cursor()
+    conn = await open_connection()
+    cursor = conn.cursor()
 
-        sql_query = """
+    sql_query = """
                 UPDATE Users 
                 SET LastMessage = ?
                 WHERE UserId = ?
            """
 
-        params = (last_message, user_id)
+    params = (last_message, user_id)
 
-        try:
-            cursor.execute(sql_query, params)
-            conn.commit()
-        except Exception as e:
-            print(f"Error updating user: {e}")
-        finally:
-            cursor.close()
-            conn.close()
-    else:
-        await message.answer("You didn't use any commands yet")
+    try:
+        cursor.execute(sql_query, params)
+        conn.commit()
+    except Exception as e:
+        print(f"Error updating user: {e}")
+    finally:
+        cursor.close()
+        conn.close()
