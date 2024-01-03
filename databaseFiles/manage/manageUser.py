@@ -47,7 +47,7 @@ async def getMessage(user_id: str):
 
 
 async def addUser(message: types.Message, user_id: str, last_message: str):
-    if not await doesExist(message.from_user.id):
+    if not (await doesExist(message.from_user.id)):
         conn = await open_connection()
         cursor = conn.cursor()
 

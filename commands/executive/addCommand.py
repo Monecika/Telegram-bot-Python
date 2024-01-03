@@ -1,6 +1,6 @@
 from aiogram import types
 
-from databaseFiles.manageTasks import addTask
+from databaseFiles.manage.manageTasks import addTask
 
 
 class Add:
@@ -15,4 +15,4 @@ class Add:
         self.description = description
 
     async def executeTask(self, message: types.Message):
-        await addTask(self.task, self.description, message)
+        await addTask(message.from_user.id, self.task, self.description, message)
