@@ -1,8 +1,7 @@
 from aiogram import types
+from databaseFiles.manage.manageDatabase import dataManager
 
-from databaseFiles.manage.manageTasks import addTask
-
-
+ADD_TASK = '/add_task'
 class Add:
     def __init__(self):
         self.task = None
@@ -15,4 +14,5 @@ class Add:
         self.description = description
 
     async def executeTask(self, message: types.Message):
-        await addTask(message.from_user.id, self.task, self.description, message)
+        params = (message.from_user.id, self.task, self.description)
+        await dataManager(message, ADD_TASK, params)

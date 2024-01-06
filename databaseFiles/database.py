@@ -1,5 +1,6 @@
 import pypyodbc as odbc
 
+
 async def open_connection():
     DRIVER_NAME = 'SQL Server'
     SERVER_NAME = 'monaa'
