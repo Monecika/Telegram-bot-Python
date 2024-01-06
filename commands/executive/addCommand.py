@@ -1,11 +1,16 @@
 from aiogram import types
 from databaseFiles.manage.manageDatabase import dataManager
 
-ADD_TASK = '/add_task'
+
+
 class Add:
     def __init__(self):
+        self.user_id = user_id
         self.task = None
         self.description = None
+
+    def setUserId(self, user_id: str):
+        self.user_id = user_id
 
     def setTask(self, task: str):
         self.task = task

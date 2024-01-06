@@ -1,11 +1,12 @@
 from aiogram import types
 
-from commands.executive.addCommand import Add
+from commands.executive.storage.userStorage import Storage
 from commands.executive.start import welcome
 from databaseFiles.manage.Task.returnableTask import selectData
 from databaseFiles.manage.manageDatabase import dataManager
+from databaseFiles.manage.User.returnableUser import getMessage
 
-add = Add()
+user_storage = Storage()
 
 UPDATE = '/update'
 BLANK = ""
@@ -24,18 +25,16 @@ class Handle:
     @staticmethod
     async def handle_add_command(message: types.Message, command):
         if command == '/add_task':
-            add.setTask(None)
-            add.setDescription(None)
-
             await message.answer("What's the task name?")
             await dataManager(message, UPDATE, command)
-        elif command != '/add_task' and add.task is None:
-            add.setTask(message.text)
+        elif not user_storage.check_task(message):
+            user_storage.add_task(message)
             await message.answer("What's the task description?")
-        else:
-            add.setDescription(message.text)
-            await add.executeTask(message)
+        elif not user_storage.check_description(message):
+            user_storage.add_description(message)
+            await user_storage.executeTask(message)
             await dataManager(message, UPDATE, BLANK)
+            user_storage.clear(message)
 
     @staticmethod
     async def handle_remove_command(message: types.Message, command):
