@@ -23,8 +23,10 @@ class Handle:
 
     @staticmethod
     async def handle_add_command(message: types.Message, command):
-
         if command == '/add_task':
+            add.setTask(None)
+            add.setDescription(None)
+
             await message.answer("What's the task name?")
             await dataManager(message, UPDATE, command)
         elif command != '/add_task' and add.task is None:
@@ -59,7 +61,7 @@ class Handle:
                 task_description = task[1]
                 formatted_data += f"{task_name} -> {task_description}\n"
 
-                await message.answer("These are all your registered tasks")
+            await message.answer("These are all your registered tasks")
         else:
             formatted_data = "No tasks found."
 

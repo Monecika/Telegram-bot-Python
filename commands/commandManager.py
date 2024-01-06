@@ -2,7 +2,7 @@ from aiogram import types
 
 from commands.handlers import Handle
 from databaseFiles.manage.User.returnableUser import doesExist, getMessage
-from databaseFiles.manage import manageDatabase
+from databaseFiles.manage.manageDatabase import dataManager
 handlers = Handle()
 
 BLANK = ""
@@ -12,7 +12,7 @@ ADD_USER = '/add_user'
 async def caller(message: types.Message):
     command = message.text.lower()
     if not (await doesExist(message.from_user.id)):
-        await manageDatabase(message, ADD_USER, BLANK)
+        await dataManager(message, ADD_USER, BLANK)
 
     if command == '/start':
         await handlers.handle_start_command(message)

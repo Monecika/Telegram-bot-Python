@@ -7,6 +7,7 @@ async def welcome(message: types.Message):
                     "/quit - Quit the current operation\n"
                     "/add_task - Add a new task\n"
                     "/remove - Remove an existing task\n"
-                    "/show - Show all your tasks")
+                    "/show - Show all your tasks\n\n"
+                    "Get organized and stay on top of your tasks with TaskManagerBot!")
 
     await message.answer(introduction)
