@@ -1,4 +1,5 @@
 from aiogram import types
+import  keyboardButtons
 
 
 async def welcome(message: types.Message):
@@ -10,4 +11,4 @@ async def welcome(message: types.Message):
                     "/show - Show all your tasks\n\n"
                     "Get organized and stay on top of your tasks with TaskManagerBot!")
 
-    await message.answer(introduction)
+    await message.answer(introduction, reply_markup=keyboardButtons.user_kb)
