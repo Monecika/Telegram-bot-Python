@@ -1,5 +1,6 @@
 from aiogram import types
-import  keyboardButtons
+
+import keyboardButtons
 
 
 async def welcome(message: types.Message):
