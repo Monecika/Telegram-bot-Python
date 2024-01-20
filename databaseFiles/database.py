@@ -1,17 +1,8 @@
-import pypyodbc as odbc
+from pymongo import MongoClient
 
+client = MongoClient("mongodb://localhost:27017")
 
-async def open_connection():
-    DRIVER_NAME = 'SQL Server'
-    SERVER_NAME = 'monaa'
-    DATABASE_NAME = 'TaskManager'
+db = client["TaskManager"]
 
-    connection_string = f"""
-        DRIVER={{{DRIVER_NAME}}};
-        SERVER={SERVER_NAME};
-        DATABASE={DATABASE_NAME};
-        Trust_Connection=yes;
-    """
-
-    conn = odbc.connect(connection_string)
-    return conn
+Tasks = db["Tasks"]
+Users = db["Users"]

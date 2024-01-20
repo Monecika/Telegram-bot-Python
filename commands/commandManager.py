@@ -1,26 +1,27 @@
 from aiogram import types
 
+from commandConfiguration import Commands
 from commands.handlers import Handle
-from databaseFiles.manage.User.returnableUser import doesExist, getMessage
-from databaseFiles.manage.manageDatabase import dataManager
-handlers = Handle()
+from databaseFiles.manage.taskHandler import TaskHandle
 
-BLANK = ""
-ADD_USER = '/add_user'
+Task_handle = TaskHandle()
+handlers = Handle()
 
 
 async def caller(message: types.Message):
-    command = message.text.lower()
-    if not (await doesExist(message.from_user.id)):
-        await dataManager(message, ADD_USER, BLANK)
+    if not await Task_handle.handle_find(message):
+        await Task_handle.handle_AddUser(message, Commands.BLANK)
 
-    if command == '/start':
+    command = message.text.lower()
+    lastMessage = await Task_handle.handle_LastMessage(message)
+
+    if command == Commands.START:
         await handlers.handle_start_command(message)
-    elif command == '/quit':
+    elif command == Commands.QUIT:
         await handlers.handle_quit_command(message)
-    elif command == '/add_task' or (await getMessage(message.from_user.id)) == '/add_task':
+    elif command == Commands.ADD_TASK or lastMessage == Commands.ADD_TASK:
         await handlers.handle_add_command(message, command)
-    elif command == '/remove' or (await getMessage(message.from_user.id)) == '/remove':
+    elif command == Commands.REMOVE_TASK or lastMessage == Commands.REMOVE_TASK:
         await handlers.handle_remove_command(message, command)
-    elif command == '/show':
-        await handlers.handle_show_command(message)
+    elif command == Commands.SHOW:
+        await Task_handle.handle_Show(message)

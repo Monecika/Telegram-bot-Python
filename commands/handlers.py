@@ -1,14 +1,13 @@
 from aiogram import types
 
-from commands.storage.userStorage import Storage
+from commandConfiguration import Commands
 from commands.start import welcome
-from databaseFiles.manage.Task.returnableTask import selectData
-from databaseFiles.manage.manageDatabase import dataManager
+from commands.storage.userStorage import Storage
+from databaseFiles.manage.taskHandler import TaskHandle
+
+Task_handle = TaskHandle()
 
 user_storage = Storage()
-
-UPDATE = '/update'
-BLANK = ""
 
 
 class Handle:
@@ -18,49 +17,30 @@ class Handle:
 
     @staticmethod
     async def handle_quit_command(message: types.Message):
-        await dataManager(message, UPDATE, BLANK)
-        await message.answer("You've canceled the action")
+        await Task_handle.handle_Update(message, Commands.BLANK)
+        if not await Task_handle.handle_LastMessage(message):
+            await message.answer("You've canceled the action")
 
     @staticmethod
     async def handle_add_command(message: types.Message, command):
-        if command == '/add_task':
+        if command == Commands.ADD_TASK:
             await message.answer("What's the task name?")
-            await dataManager(message, UPDATE, command)
+            await Task_handle.handle_Update(message, command)
         elif not user_storage.check_task(message):
             user_storage.add_task(message)
             await message.answer("What's the task description?")
         elif not user_storage.check_description(message):
             user_storage.add_description(message)
             await user_storage.executeTask(message)
-            await dataManager(message, UPDATE, BLANK)
+            await Task_handle.handle_Update(message, Commands.BLANK)
             user_storage.clear(message)
 
     @staticmethod
     async def handle_remove_command(message: types.Message, command):
-        if command == '/remove':
-            data = await selectData(message.from_user.id)
-            formatted_data = "\n".join(task[0] for task in data) if data else "No tasks found."
-            await message.answer(formatted_data)
+        if command == Commands.REMOVE_TASK:
+            await Task_handle.handle_Show(message)
             await message.answer("What's the task name you want to delete?")
-            await dataManager(message, UPDATE, command)
+            await Task_handle.handle_Update(message, command)
         else:
-            await dataManager(message, '/remove', BLANK)
-            await dataManager(message, UPDATE, BLANK)
-
-    @staticmethod
-    async def handle_show_command(message: types.Message):
-        data = await selectData(message.from_user.id)
-        formatted_data = ""
-
-        if data:
-
-            for task in data:
-                task_name = task[0]
-                task_description = task[1]
-                formatted_data += f"{task_name} -> {task_description}\n"
-
-            await message.answer("These are all your registered tasks")
-        else:
-            formatted_data = "No tasks found."
-
-        await message.answer(formatted_data)
+            await Task_handle.handle_Remove(message)
+            await Task_handle.handle_Update(message, Commands.BLANK)

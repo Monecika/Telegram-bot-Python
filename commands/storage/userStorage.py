@@ -1,6 +1,6 @@
 from aiogram import types
 
-from databaseFiles.manage.manageDatabase import dataManager
+from databaseFiles.manage.taskHandler import TaskHandle
 
 ADD_TASK = '/add_task'
 
@@ -54,5 +54,6 @@ class Storage:
                 self.description_list.remove(description_dict)
 
     async def executeTask(self, message: types.Message):
-        params = (message.from_user.id, self.get_task(message), self.get_description(message))
-        await dataManager(message, ADD_TASK, params)
+        query = {"_id": message.from_user.id, "TaskName": self.get_task(message),
+                 "TaskDescription": self.get_description(message)}
+        await TaskHandle.handle_AddTask(message, query)
